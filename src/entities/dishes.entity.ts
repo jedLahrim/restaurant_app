@@ -12,7 +12,7 @@ export class Dishes {
   price: number;
 
   @Column({ nullable: true })
-  photo?: string;
+  photoUrl?: string;
 
   @Column()
   description: string;

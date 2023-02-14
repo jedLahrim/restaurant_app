@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Raw, Repository } from "typeorm";
 import { Category } from "../entities/category.entity";
 import { Request, Response } from "express";
 import { Restaurant } from "../entities/restaurant.entity";
@@ -111,7 +111,7 @@ export class RestaurantService {
       });
       return new Pagination<Restaurant>(restaurants, totalResults);
     } catch {
-      return { ok: false, error: "Could not get restaurants" };
+      res.send("505").json("Could not get restaurants");
     }
   }
 
@@ -123,84 +123,65 @@ export class RestaurantService {
         relations: ["menu"],
       });
       if (!restaurant) {
-        return { ok: false, error: "Restaurant not found" };
+        res.send("404").json("Restaurant not found");
       }
       return { ok: true, restaurant };
     } catch {
-      return { ok: false, error: "Could not get restaurant" };
+      res.send("505").json("Could not get restaurant");
     }
   }
   //
-  // async searchRestaurantByName({
-  //   restaurantName,
-  //   page,
-  // }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
-  //   try {
-  //     const [restaurants, totalResults] = await this.restaurants.findAndCount({
-  //       where: {
-  //         name: Raw((name) => `${name} LIKE '%${restaurantName}%'`),
-  //       },
-  //       take: 4,
-  //       skip: (page - 1) ,
-  //     });
-  //     return {
-  //       ok: true,
-  //       restaurants,
-  //       totalResults,
-  //       totalPages: Math.ceil(totalResults / 25),
-  //     };
-  //   } catch {
-  //     return { ok: false, error: "Could not search for restaurants" };
-  //   }
-  // }
+  async searchRestaurantByName(
+    req: Request,
+    res: Response
+  ): Promise<Pagination<Restaurant>> {
+    const { restaurantName, page } = req.body;
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
+        where: {
+          name: Raw((name) => `${name} LIKE '%${restaurantName}%'`),
+        },
+        take: 4,
+        skip: page - 1,
+      });
+      return new Pagination<Restaurant>(restaurants, totalResults);
+    } catch {
+      res.send("505").json("Could not search for restaurants");
+    }
+  }
   //
-  // async allCategories(): Promise<AllCategoriesOutput> {
-  //   try {
-  //     const categories = await this.categories.find();
-  //     return { ok: true, categories };
-  //   } catch {
-  //     return { ok: false, error: "Could not get categories" };
-  //   }
-  // }
+  async allCategories(req, res): Promise<Category[]> {
+    return await this.category.find();
+  }
   //
-  // async countRestaurants(category: Category): Promise<number> {
-  //   return this.restaurants.count({ category });
-  // }
-  //
-  // async myRestaurants(owner: User): Promise<MyRestaurantsOutput> {
-  //   try {
-  //     const restaurants = await this.restaurants.find({ owner });
-  //     return {
-  //       restaurants,
-  //       ok: true,
-  //     };
-  //   } catch {
-  //     return {
-  //       ok: false,
-  //       error: "Could not find restaurants.",
-  //     };
-  //   }
-  // }
-  // async myRestaurant(
-  //   owner: User,
-  //   { id }: MyRestaurantInput
-  // ): Promise<MyRestaurantOutput> {
-  //   try {
-  //     const restaurant = await this.restaurants.findOne(
-  //       { owner, id },
-  //       { relations: ["menu", "orders"] }
-  //     );
-  //     return {
-  //       restaurant,
-  //       ok: true,
-  //     };
-  //   } catch {
-  //     return {
-  //       ok: false,
-  //       error: "Could not find restaurant",
-  //     };
-  //   }
-  // }
+  async countRestaurants(req: Request, res: Response): Promise<number> {
+    const { restaurantId } = req.body;
+    const restaurant = await this.restaurants.findOne({
+      where: { id: restaurantId },
+    });
+    return this.restaurants.count({ where: { category: restaurant.category } });
+  }
+
+  async myRestaurants(req: Request, res: Response): Promise<Restaurant[]> {
+    const owner = req.user;
+    try {
+      return await this.restaurants.find({ where: { owner } });
+    } catch {
+      res.send("505").json("could not find restaurants");
+    }
+  }
+  async myRestaurant(req: Request, res: Response): Promise<Restaurant> {
+    try {
+      const { id } = req.body;
+      const owner = req.user;
+      return await this.restaurants.findOne({
+        where: { owner, id },
+        relations: ["menu", "orders"],
+      });
+    } catch {
+      res.send("505").json("Could not find restaurant");
+    }
+  }
   //
   // async findCategoryBySlug({
   //   slug,
@@ -239,31 +220,27 @@ export class RestaurantService {
   //   }
   // }
   //
-  // async createDish(
-  //   owner: User,
-  //   createDishInput: CreateDishInput
-  // ): Promise<CreateDishOutput> {
-  //   try {
-  //     const restaurant = await this.restaurants.findOne(
-  //       createDishInput.restaurantId
-  //     );
-  //     if (!restaurant) {
-  //       return { ok: false, error: "Restaurant not found" };
-  //     }
-  //     if (owner.id !== restaurant.ownerId) {
-  //       return {
-  //         ok: false,
-  //         error: "You can't add dish to another owner's restaurant",
-  //       };
-  //     }
-  //     await this.dishes.save(
-  //       this.dishes.create({ ...createDishInput, restaurant })
-  //     );
-  //     return { ok: true };
-  //   } catch {
-  //     return { ok: false, error: "Could not create dish" };
-  //   }
-  // }
+  async createDish(req: Request, res: Response): Promise<Dishes> {
+    const { restaurantId, name, price, description } = req.body;
+    const owner: any = req.user;
+    try {
+      const restaurant = await this.restaurants.findOne({
+        where: { id: restaurantId },
+      });
+      if (!restaurant) {
+        res.send("405").json("Restaurant not found");
+      }
+      if (owner.id !== restaurant.owner.id) {
+        res
+          .send("505")
+          .json("You can't add dish to another owner's restaurant");
+      }
+      const dishes = await this.dishes.create({ price, name, description });
+      return await this.dishes.save(dishes);
+    } catch {
+      res.send("505").json("Could not create dish");
+    }
+  }
   //
   // async editDish(
   //   owner: User,
