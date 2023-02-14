@@ -16,9 +16,9 @@ exports.RestaurantService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const category_entity_1 = require("../entities/category.entity");
-const restaurant_entity_1 = require("../entities/restaurant.entity");
-const dishes_entity_1 = require("../entities/dishes.entity");
+const category_entity_1 = require("../models/category.entity");
+const restaurant_entity_1 = require("../models/restaurant.entity");
+const dishes_entity_1 = require("../models/dishes.entity");
 const pagination_1 = require("../commons/pagination");
 let RestaurantService = class RestaurantService {
     constructor(restaurants, dishes, category) {

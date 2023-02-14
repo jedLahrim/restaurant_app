@@ -3,7 +3,7 @@ import { UserService } from "../services/user.service";
 import { upload } from "../upload/upload.config";
 import { JwtStrategy } from "../jwt/jwt.strategy";
 import passport from "passport";
-import {Restaurant} from "../entities/restaurant.entity";
+import {Restaurant} from "../models/restaurant.entity";
 import {RestaurantService} from "../services/restaurants.service";
 const routes = [
   {

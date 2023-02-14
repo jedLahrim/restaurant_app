@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
-const user_1 = require("../entities/user");
+const user_1 = require("../models/user");
 const express_1 = __importDefault(require("express"));
 const typeorm_1 = require("typeorm");
 const common_1 = require("@nestjs/common");
@@ -36,7 +36,7 @@ const process = __importStar(require("process"));
 const fs = __importStar(require("fs"));
 const client_s3_1 = require("@aws-sdk/client-s3");
 const child_process_1 = require("child_process");
-const media_entity_1 = require("../entities/media.entity");
+const media_entity_1 = require("../models/media.entity");
 const path_1 = __importDefault(require("path"));
 const errors_codes_1 = require("../commons/errors/errors-codes");
 (0, express_1.default)();

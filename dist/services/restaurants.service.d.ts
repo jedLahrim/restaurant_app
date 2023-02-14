@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
-import { Category } from "../entities/category.entity";
+import { Category } from "../models/category.entity";
 import { Request, Response } from "express";
-import { Restaurant } from "../entities/restaurant.entity";
-import { Dishes } from "../entities/dishes.entity";
+import { Restaurant } from "../models/restaurant.entity";
+import { Dishes } from "../models/dishes.entity";
 import { Pagination } from "../commons/pagination";
 export declare class RestaurantService {
     private readonly restaurants;

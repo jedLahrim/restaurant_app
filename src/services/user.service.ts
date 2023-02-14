@@ -1,4 +1,4 @@
-import { User } from "../entities/user";
+import { User } from "../models/user";
 import express, { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
 import {
@@ -13,7 +13,7 @@ import * as process from "process";
 import * as fs from "fs";
 import { AbortMultipartUploadCommand, S3 } from "@aws-sdk/client-s3";
 import { ChildProcess, exec } from "child_process";
-import { Media } from "../entities/media.entity";
+import { Media } from "../models/media.entity";
 import path from "path";
 import {
   EMAIL_OR_PASSWORD_IS_INCORRECT,
