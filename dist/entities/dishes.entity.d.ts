@@ -3,7 +3,7 @@ export declare class Dishes {
     id: string;
     name: string;
     price: number;
-    photo?: string;
+    photoUrl?: string;
     description: string;
     restaurant: Restaurant;
 }

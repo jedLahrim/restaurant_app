@@ -116,7 +116,7 @@ let RestaurantService = class RestaurantService {
             return new pagination_1.Pagination(restaurants, totalResults);
         }
         catch {
-            return { ok: false, error: "Could not get restaurants" };
+            res.send("505").json("Could not get restaurants");
         }
     }
     async findRestaurantById(req, res) {
@@ -127,12 +127,82 @@ let RestaurantService = class RestaurantService {
                 relations: ["menu"],
             });
             if (!restaurant) {
-                return { ok: false, error: "Restaurant not found" };
+                res.send("404").json("Restaurant not found");
             }
             return { ok: true, restaurant };
         }
         catch {
-            return { ok: false, error: "Could not get restaurant" };
+            res.send("505").json("Could not get restaurant");
+        }
+    }
+    async searchRestaurantByName(req, res) {
+        const { restaurantName, page } = req.body;
+        try {
+            const [restaurants, totalResults] = await this.restaurants.findAndCount({
+                where: {
+                    name: (0, typeorm_2.Raw)((name) => `${name} LIKE '%${restaurantName}%'`),
+                },
+                take: 4,
+                skip: page - 1,
+            });
+            return new pagination_1.Pagination(restaurants, totalResults);
+        }
+        catch {
+            res.send("505").json("Could not search for restaurants");
+        }
+    }
+    async allCategories(req, res) {
+        return await this.category.find();
+    }
+    async countRestaurants(req, res) {
+        const { restaurantId } = req.body;
+        const restaurant = await this.restaurants.findOne({
+            where: { id: restaurantId },
+        });
+        return this.restaurants.count({ where: { category: restaurant.category } });
+    }
+    async myRestaurants(req, res) {
+        const owner = req.user;
+        try {
+            return await this.restaurants.find({ where: { owner } });
+        }
+        catch {
+            res.send("505").json("could not find restaurants");
+        }
+    }
+    async myRestaurant(req, res) {
+        try {
+            const { id } = req.body;
+            const owner = req.user;
+            return await this.restaurants.findOne({
+                where: { owner, id },
+                relations: ["menu", "orders"],
+            });
+        }
+        catch {
+            res.send("505").json("Could not find restaurant");
+        }
+    }
+    async createDish(req, res) {
+        const { restaurantId, name, price, description } = req.body;
+        const owner = req.user;
+        try {
+            const restaurant = await this.restaurants.findOne({
+                where: { id: restaurantId },
+            });
+            if (!restaurant) {
+                res.send("405").json("Restaurant not found");
+            }
+            if (owner.id !== restaurant.owner.id) {
+                res
+                    .send("505")
+                    .json("You can't add dish to another owner's restaurant");
+            }
+            const dishes = await this.dishes.create({ price, name, description });
+            return await this.dishes.save(dishes);
+        }
+        catch {
+            res.send("505").json("Could not create dish");
         }
     }
 };

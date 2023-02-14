@@ -3,6 +3,7 @@ import { Category } from "../entities/category.entity";
 import { Request, Response } from "express";
 import { Restaurant } from "../entities/restaurant.entity";
 import { Dishes } from "../entities/dishes.entity";
+import { Pagination } from "../commons/pagination";
 export declare class RestaurantService {
     private readonly restaurants;
     private readonly dishes;
@@ -14,4 +15,10 @@ export declare class RestaurantService {
     deleteRestaurant(req: Request, res: Response): Promise<void>;
     allRestaurants(req: Request, res: Response): Promise<any>;
     findRestaurantById(req: Request, res: Response): Promise<any>;
+    searchRestaurantByName(req: Request, res: Response): Promise<Pagination<Restaurant>>;
+    allCategories(req: any, res: any): Promise<Category[]>;
+    countRestaurants(req: Request, res: Response): Promise<number>;
+    myRestaurants(req: Request, res: Response): Promise<Restaurant[]>;
+    myRestaurant(req: Request, res: Response): Promise<Restaurant>;
+    createDish(req: Request, res: Response): Promise<Dishes>;
 }
