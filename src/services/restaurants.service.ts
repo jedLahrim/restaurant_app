@@ -143,7 +143,7 @@ export class RestaurantService {
       res.send("505").json("Could not get restaurant");
     }
   }
-  //
+  
   async searchRestaurantByName(req: Request, res: Response): Promise<void> {
     const query: any = req.query;
     const { restaurantName, page, coverImageDto } = query;
