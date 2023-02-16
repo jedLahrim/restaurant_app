@@ -197,7 +197,7 @@ export class RestaurantService {
       res.send("505").json("Could not find restaurant");
     }
   }
-  
+  //
   // async findCategoryBySlug({
   //   slug,
   //   page,
