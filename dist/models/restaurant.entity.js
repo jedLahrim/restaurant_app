@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Restaurant = void 0;
 const typeorm_1 = require("typeorm");
 const category_entity_1 = require("./category.entity");
-const user_1 = require("./user");
+const user_entity_1 = require("./user.entity");
 const dishes_entity_1 = require("./dishes.entity");
 let Restaurant = class Restaurant {
 };
@@ -37,21 +37,21 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Restaurant.prototype, "isPromoted", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)((type) => category_entity_1.Category, (category) => category.restaurant, {
-        nullable: true,
+    (0, typeorm_1.ManyToOne)((_type) => category_entity_1.Category, (category) => category.restaurant, {
         onDelete: "CASCADE",
     }),
     __metadata("design:type", category_entity_1.Category)
 ], Restaurant.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)((type) => user_1.User, (user) => user.restaurant, {
-        nullable: true,
+    (0, typeorm_1.ManyToOne)((_type) => user_entity_1.User, (user) => user.restaurant, {
         onDelete: "CASCADE",
     }),
-    __metadata("design:type", user_1.User)
+    __metadata("design:type", user_entity_1.User)
 ], Restaurant.prototype, "owner", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)((type) => dishes_entity_1.Dishes, (menu) => menu.restaurant),
+    (0, typeorm_1.ManyToOne)((_type) => dishes_entity_1.Dishes, (menu) => menu.restaurant, {
+        onDelete: "CASCADE",
+    }),
     __metadata("design:type", Array)
 ], Restaurant.prototype, "menu", void 0);
 Restaurant = __decorate([

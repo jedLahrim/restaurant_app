@@ -38,7 +38,6 @@ let RestaurantService = class RestaurantService {
             });
             newRestaurant.owner = owner;
             category = await this._findOrCreateCategory(req);
-            newRestaurant.category = category;
             await this.restaurants.save(newRestaurant);
             return newRestaurant;
         }
@@ -159,7 +158,7 @@ let RestaurantService = class RestaurantService {
         const restaurant = await this.restaurants.findOne({
             where: { id: restaurantId },
         });
-        return this.restaurants.count({ where: { category: restaurant.category } });
+        return this.restaurants.count({ where: { id: '' } });
     }
     async myRestaurants(req, res) {
         const owner = req.user;

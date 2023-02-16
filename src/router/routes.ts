@@ -3,8 +3,8 @@ import { UserService } from "../services/user.service";
 import { upload } from "../upload/upload.config";
 import { JwtStrategy } from "../jwt/jwt.strategy";
 import passport from "passport";
-import {Restaurant} from "../models/restaurant.entity";
-import {RestaurantService} from "../services/restaurants.service";
+import { Restaurant } from "../models/restaurant.entity";
+import { RestaurantService } from "../services/restaurants.service";
 const routes = [
   {
     method: "get",
@@ -127,9 +127,52 @@ const routes = [
   {
     method: "post",
     route: "/restaurants/create",
+    strategy: JwtStrategy,
+    guard: "authGuard",
     service: RestaurantService,
     action: "createRestaurant",
+    validation: [
+      body("name"),
+      body("address"),
+      body("coverImage"),
+      body("isPromoted"),
+    ],
+  },
+  {
+    method: "get",
+    route: "/restaurants/edit/restaurant",
+    strategy: JwtStrategy,
+    guard: "authGuard",
+    service: RestaurantService,
+    action: "editRestaurant",
     validation: [],
+  },
+  {
+    method: "delete",
+    route: "/restaurants/delete/:id",
+    strategy: JwtStrategy,
+    guard: "authGuard",
+    service: RestaurantService,
+    action: "deleteRestaurant",
+    validation: [param("id")],
+  },
+  {
+    method: "get",
+    route: "/restaurants/getAll",
+    strategy: JwtStrategy,
+    guard: "authGuard",
+    service: RestaurantService,
+    action: "allRestaurants",
+    validation: [query("skip"), query("page")],
+  },
+  {
+    method: "get",
+    route: "/restaurants/getAll/name",
+    strategy: JwtStrategy,
+    guard: "authGuard",
+    service: RestaurantService,
+    action: "searchRestaurantByName",
+    validation: [query("skip"), query("page"), query("restaurantName"),]
   },
 ];
 export default routes;

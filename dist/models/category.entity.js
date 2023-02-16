@@ -27,11 +27,11 @@ __decorate([
     __metadata("design:type", String)
 ], Category.prototype, "coverImg", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)((type) => restaurant_entity_1.Restaurant, (restaurant) => restaurant.category, {
-        nullable: true,
+    (0, typeorm_1.OneToMany)((_type) => restaurant_entity_1.Restaurant, (restaurant) => restaurant.category, {
+        eager: true,
         onDelete: "CASCADE",
     }),
-    __metadata("design:type", restaurant_entity_1.Restaurant)
+    __metadata("design:type", Array)
 ], Category.prototype, "restaurant", void 0);
 exports.Category = Category;
 //# sourceMappingURL=category.entity.js.map

@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
-const user_1 = require("../models/user");
+const user_entity_1 = require("../Models/user.entity");
 const express_1 = __importDefault(require("express"));
 const typeorm_1 = require("typeorm");
 const common_1 = require("@nestjs/common");
@@ -46,7 +46,7 @@ const passport_1 = __importDefault(require("passport"));
 const qrcode = __importStar(require("qrcode"));
 class UserService {
     constructor() {
-        this.userRepo = (0, typeorm_1.getRepository)(user_1.User);
+        this.userRepo = (0, typeorm_1.getRepository)(user_entity_1.User);
         this.mediaRepo = (0, typeorm_1.getRepository)(media_entity_1.Media);
     }
     async getAll(req, res) {

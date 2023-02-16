@@ -32,8 +32,8 @@ export class User {
   refresh_expire_at: Date;
   access_expire_at: Date;
 
-  @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner, {
-    nullable: true,
+  @OneToMany((_type) => Restaurant, (restaurant) => restaurant.owner, {
+    eager: true,
     onDelete: "CASCADE",
   })
   restaurant: Restaurant[];

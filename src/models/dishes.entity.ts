@@ -1,5 +1,11 @@
 import { Restaurant } from "./restaurant.entity";
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
 export class Dishes {
@@ -17,8 +23,9 @@ export class Dishes {
   @Column()
   description: string;
 
-  @ManyToOne((type) => Restaurant, (restaurant) => restaurant.menu, {
+  @OneToMany((_type) => Restaurant, (restaurant) => restaurant.menu, {
+    eager: true,
     onDelete: "CASCADE",
   })
-  restaurant: Restaurant;
+  restaurant: Restaurant[];
 }

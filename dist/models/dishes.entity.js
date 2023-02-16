@@ -35,7 +35,8 @@ __decorate([
     __metadata("design:type", String)
 ], Dishes.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)((type) => restaurant_entity_1.Restaurant, (restaurant) => restaurant.menu, {
+    (0, typeorm_1.OneToMany)((_type) => restaurant_entity_1.Restaurant, (restaurant) => restaurant.menu, {
+        eager: true,
         onDelete: "CASCADE",
     }),
     __metadata("design:type", restaurant_entity_1.Restaurant)

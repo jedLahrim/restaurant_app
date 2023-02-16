@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const routes_1 = __importDefault(require("./router/routes"));
+const typeorm_1 = require("typeorm");
+const config_1 = __importDefault(require("./config/config"));
 const app = (0, express_1.default)();
 function handleError(err, req, res) {
     res.status(err.statusCode || 500).send(err.message);
@@ -35,7 +37,10 @@ app.get("/", (req, res) => {
     res.json({ message: "Help turkish people!" });
 });
 const port = 3000;
-app.listen(port, () => {
-    console.log("Server Running! on port 3000");
+(0, typeorm_1.createConnection)(config_1.default).then(async (connection) => {
+    console.log("database connected successfully");
+    app.listen(port, () => {
+        console.log("Server Running! on port 3000");
+    });
 });
 //# sourceMappingURL=app.js.map

@@ -1,5 +1,5 @@
 import { Category } from "./category.entity";
-import { User } from "./user";
+import { User } from "./user.entity";
 import { Dishes } from "./dishes.entity";
 export declare class Restaurant {
     id: string;

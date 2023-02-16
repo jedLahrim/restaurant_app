@@ -1,0 +1,9 @@
+version: "3"
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: restaurantUser
+      POSTGRES_PASSWORD: thisIsPassword
+    ports:
+      - "8864:5432"
